@@ -1,0 +1,14 @@
+{% load static %}
+<html lang="en">
+    <head>
+        <title>CRUD PROJECT</title>
+        <link rel="stylesheet" href="{% static 'studentinfo/css/bootstrap.min.css' %}">
+    </head>
+        <body>
+            <div class="container mt-5">
+              <h2 class="text-center alert alert-success">My First CRUD project</h2>  
+              {% block content%} 
+              {% endblock content %}
+            </div>
+    </body>
+</html>

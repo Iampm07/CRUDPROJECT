@@ -1,0 +1,59 @@
+{% extends 'studentinfo/base.html' %}
+
+{% block content %}
+  <div class="row">
+       <div class="col-sm-4">
+        <h4 class="text-center alert alert-info">ADD NEW STUDENT</h4>
+        <form action="" method="post">
+             {% csrf_token %} <!--security token to prevent from hackers -->
+              {{form.as_p}}
+         <input type="submit" class="btn btn-primary" value="Add">  
+        </form>
+      </div>
+      <div class="col-sm-8">
+        <h4 class="text-center alert alert-info">SHOW STUDENT DATA</h4>
+        {% if stu %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">NAME</th>
+              <th scope="col">EMAIL</th>
+              <th scope="col">PASSWORD</th>
+            </tr>
+          </thead>
+          <tbody>
+             {%for st in stu %}
+            <tr>
+              <th>{{st.id}}</th>
+              <td>{{st.name}}</td>
+              <td>{{st.email}}</td>
+              <td>{{st.password}}</td>
+              <td>
+                <form action="{% url 'delete_data' st.id %}" method="POST">
+                {%csrf_token%}
+                <input type="submit" class="btn btn-danger" value="delete">
+              </form>
+              </td>
+              
+              <td>
+                
+                <form action="{% url 'update_data' st.id %}" method="put">
+                  {%csrf_token%}
+                  <input type="submit" class="btn btn-primary" value="update">
+                  
+                  
+                </form>
+                
+              </td>
+              
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+        {% else %}
+        <h4 class="text-center alert alert-danger">NO RECORDS FOUND</h4>
+         {%endif%}
+      </div>
+  </div>
+{% endblock content %}

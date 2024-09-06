@@ -1,0 +1,15 @@
+Documentation for the Django project CRUD.
+
+Setting up environment:
+---> Here we are using (environ) as a virtual environment.
+
+1. First we started with creating project as python manage.py startproject crudproject
+
+2. After creating project we  created a superuser to access admin panel.
+    through (createsuperuser) command in python manage.py createsuperuser.
+    herry there is no username and password.(username-pankaj   pswd-1234)
+3. creating a app--> python manage.py startapp studentinfo
+   added app in installed apps in (settings.py)
+4. created models in models.py which is (UserProfile)
+5. 
+
