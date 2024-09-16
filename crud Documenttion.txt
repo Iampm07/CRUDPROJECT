@@ -6,10 +6,12 @@ Setting up environment:
 1. First we started with creating project as python manage.py startproject crudproject
 
 2. After creating project we  created a superuser to access admin panel.
-    through (createsuperuser) command in python manage.py createsuperuser.
-    herry there is no username and password.(username-pankaj   pswd-1234)
-3. creating a app--> python manage.py startapp studentinfo
+   through (createsuperuser) command in python manage.py createsuperuser.
+   there is no username and password.(username-pankaj   pswd-1234)
+3. Creating a app--> python manage.py startapp studentinfo
    added app in installed apps in (settings.py)
-4. created models in models.py which is (UserProfile)
-5. 
-
+4. Created models in models.py which is (UserProfile)
+resiter model into admin.py
+5. Created forms in forms.py(student registration) and its fields with meta class adding UserProfile model and fields (name,email,password)
+6. Created views.py with (addandshow,update,delete)
+7.Created urls.py and added path into it(path('',views.add_show,name='add_show'))and same for update and delete. 
