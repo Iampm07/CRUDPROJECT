@@ -15,3 +15,4 @@ resiter model into admin.py
 5. Created forms in forms.py(student registration) and its fields with meta class adding UserProfile model and fields (name,email,password)
 6. Created views.py with (addandshow,update,delete)
 7.Created urls.py and added path into it(path('',views.add_show,name='add_show'))and same for update and delete. 
+Update.html view for updatinnf the data 
