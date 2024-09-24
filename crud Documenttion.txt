@@ -8,11 +8,159 @@ Setting up environment:
 2. After creating project we  created a superuser to access admin panel.
    through (createsuperuser) command in python manage.py createsuperuser.
    there is no username and password.(username-pankaj   pswd-1234)
-3. Creating a app--> python manage.py startapp studentinfo
+3. Creating an app--> python manage.py startapp studentinfo
    added app in installed apps in (settings.py)
 4. Created models in models.py which is (UserProfile)
-resiter model into admin.py
-5. Created forms in forms.py(student registration) and its fields with meta class adding UserProfile model and fields (name,email,password)
+   register model into admin.py(Which included name,email,password)
+5. Created forms in forms.py(student registration) and its fields with meta class 
+   adding UserProfile model and its  fields (name,email,password)
 6. Created views.py with (addandshow,update,delete)
-7.Created urls.py and added path into it(path('',views.add_show,name='add_show'))and same for update and delete. 
-Update.html view for updatinnf the data 
+7.Created urls.py and added path into it as:
+urlpatterns = [
+    path('', views.add_show,name='add_show'),
+    path('delete/<int:id>',views.delete_data,name="delete_data"),
+    path('update/<int:id>',views.update_data,name="update_data"),
+]
+register in admin.py of studentinfo
+every model has to register to show in db.
+now in views.py
+from django.shortcuts import render,redirect,get_object_or_404
+from .forms import StudentRegistration
+from .models import UserProfile
+import logging
+logger = logging.getLogger(__name__)
+# Create your views here.
+def add_show(request):
+    if request.method =='POST': #to post data
+        fm = StudentRegistration(request.POST)
+        if fm.is_valid():
+            fm.save()
+            fm = StudentRegistration()
+    else:        
+      fm = StudentRegistration() #to get data get method
+    stud=UserProfile.objects.all()
+    return render(request,'studentinfo/addandshow.html',{'form':fm,'stu':stud})
+
+def update_data(request,id):
+    student= get_object_or_404(UserProfile,pk=id)
+    logger.debug(f"id is {id},student object:{student.name},{student.email}")
+    
+    
+    
+    if request.method=='POST':
+        
+        form = StudentRegistration(request.POST,instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('/studentinfo')
+    else:
+        
+        form = StudentRegistration(instance=student)
+        logger.debug(f"Form initialized with: {form.instance.name}, {form.instance.email}")
+    return render(request,'studentinfo/update.html',{'form':form})
+
+def delete_data(request,id):
+    if request.method=='POST':
+         del1 = UserProfile.objects.get(pk=id)
+         del1.delete()
+    return redirect('/studentinfo')
+
+created templates >studentinfo>
+addandshow.html
+{% extends 'studentinfo/base.html' %}
+
+{% block content %}
+  <div class="row">
+       <div class="col-sm-4">
+        <h4 class="text-center alert alert-info">ADD NEW STUDENT</h4>
+        <form action="" method="post">
+             {% csrf_token %} <!--security token to prevent from hackers -->
+              {{form.as_p}}
+         <input type="submit" class="btn btn-primary" value="Add">  
+        </form>
+      </div>
+      <div class="col-sm-8">
+        <h4 class="text-center alert alert-info">SHOW STUDENT DATA</h4>
+        {% if stu %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">NAME</th>
+              <th scope="col">EMAIL</th>
+              <th scope="col">PASSWORD</th>
+            </tr>
+          </thead>
+          <tbody>
+             {%for st in stu %}
+            <tr>
+              <th>{{st.id}}</th>
+              <td>{{st.name}}</td>
+              <td>{{st.email}}</td>
+              <td>{{st.password}}</td>
+              <td>
+                <form action="{% url 'delete_data' st.id %}" method="POST">
+                {%csrf_token%}
+                <input type="submit" class="btn btn-danger" value="delete">
+              </form>
+              </td>
+              
+              <td>
+                
+                <form action="{% url 'update_data' st.id %}" method="put">
+                  {%csrf_token%}
+                  <input type="submit" class="btn btn-primary" value="update">
+                  
+                  
+                </form>
+                
+              </td>
+              
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+        {% else %}
+        <h4 class="text-center alert alert-danger">NO RECORDS FOUND</h4>
+         {%endif%}
+      </div>
+  </div>
+{% endblock content %}
+
+base.html
+
+{% load static %}
+<html lang="en">
+    <head>
+        <title>CRUD PROJECT</title>
+        <link rel="stylesheet" href="{% static 'studentinfo/css/bootstrap.min.css' %}">
+    </head>
+        <body>
+            <div class="container mt-5">
+              <h2 class="text-center alert alert-success">My First CRUD project</h2>  
+              {% block content%} 
+              {% endblock content %}
+            </div>
+    </body>
+</html>
+
+update.html
+
+{% load static %}
+<html lang="en">
+    <head>
+        <title>CRUD PROJECT</title>
+        <link rel="stylesheet" href="{% static 'studentinfo/css/bootstrap.min.css' %}">
+    </head>
+        <body>
+            <div class="container mt-5">
+              <h2 class="text-center alert alert-success">My First CRUD project</h2>  
+              {% block content%} 
+              {% endblock content %}
+            </div>
+    </body>
+</html>
+
+and in static add css,js and add bootstap.min.css
+and in  js folder bootstap.min.js
+
